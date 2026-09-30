@@ -1,0 +1,22 @@
+{
+  "name": "edtech-leaked-key-drill",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "drill": "tsx src/edtech_drill.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test test/learner_priority.test.ts"
+  },
+  "dependencies": {
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

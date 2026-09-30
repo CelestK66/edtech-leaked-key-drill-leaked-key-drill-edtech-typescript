@@ -1,0 +1,11 @@
+{
+  "drillId": "semester-launch-2026-09",
+  "courses": [
+    {
+      "courseId": "course-algebra",
+      "title": "Algebra checkpoint",
+      "learnerIds": ["learner-42", "learner-77"],
+      "deadline": "2026-10-01T16:00:00.000Z"
+    }
+  ]
+}
