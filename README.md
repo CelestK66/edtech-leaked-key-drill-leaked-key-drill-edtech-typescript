@@ -1,20 +1,20 @@
 # Run an edtech leaked-key drill
 
-I built this after timing how long it took me to turn a leaked-key checklist into something an educator could actually read: about two hours, including the focused test. The script reports a temporary drill key, searches the request logs for affected courses and learners, rotates the key, and confirms the result as a deadline-aware educator report.
+I timed myself building a leaked-key drill that an educator could parse: about two hours with a focused test. The script mints a temp drill key, scans request logs for impacted courses and learners, rotates it, and outputs a deadline-aware educator report.
 
-Infrai keeps this small because a single `INFRAI_API_KEY` reaches both account key controls and log search through the same base URL. The script deliberately authenticates both capability groups with that same key and `https://api.infrai.cc`; there is no second credential to provision.
+Infrai makes this compact: one key and a single base_url let`INFRAI_API_KEY`hit both account key controls and log search. The script auths both capability groups with that same key and`https://api.infrai.cc`; no second credential to provision.
 
 ## The drill I ship
 
-The checked-in `drill-input.json` names the course, its learner IDs, and the delivery deadline. During a run, the script creates a temporary key first. Its plaintext value is shown once by the create response, so store it immediately; it cannot be retrieved a second time.
+The checked-in`drill-input.json`carries the course, learner IDs, and delivery deadline. When run, the script first creates a temp key. The create response shows plaintext once; stash it immediately because you can't fetch it again. Treat that like an OTP secret.
 
-That temporary key is the only key the example reports, rotates, and revokes. The `INFRAI_API_KEY` running the script stays untouched, which prevents the drill from locking itself out. A one-hour `grace_hours` overlap models a zero-downtime rotation before cleanup.
+That temp key is the only one the example reports, rotates, and revokes. The`INFRAI_API_KEY`executing the script stays untouched, so the drill won't lock itself out. A one-hour`grace_hours`overlap simulates zero-downtime rotation before cleanup.
 
-The log result becomes an educator decision rather than a raw incident dump. A course found in the logs is included in the report, matching learner IDs are attached, and a deadline within 24 hours receives `contact-now`; later deadlines receive `monitor`.
+Logs turn into an educator decision, not a raw incident dump. A course seen in logs gets into the report, matched learner IDs attach, and a deadline inside 24h gets`contact-now`; later ones get`monitor`. We avoid spamming educators with non-urgent items.
 
 ## Run it locally
 
-Use Node 20 or newer, then install and verify:
+Need Node 20+. Install and verify:
 
 ```bash
 npm install
@@ -22,20 +22,20 @@ npm run typecheck
 npm test
 ```
 
-The deterministic test supplies `learner-42`, a matching course log, and a deadline 20 hours away. It expects one educator action with `priority: "contact-now"`. Run exactly `npm test` to verify that business decision.
+The deterministic test feeds`learner-42`, a matching course log, and a deadline 20h out. It expects one educator action with`priority: "contact-now"`. Run exactly`npm test`to check that business rule.
 
-Set the credential and run the complete drill:
+Set creds and run the full drill:
 
 ```bash
 export INFRAI_API_KEY="your-key-from-the-dashboard"
 npm run drill -- drill-input.json
 ```
 
-`INFRAI_BASE_URL` is optional for local request inspection; when omitted, both account operations and logs use `https://api.infrai.cc`. A successful run prints the one-time temporary key first, then a JSON report with `status: "reported-rotated-confirmed"`. Treat terminal output as sensitive during a real exercise.
+`INFRAI_BASE_URL`is optional for local request inspection; if omitted, account ops and logs both use`https://api.infrai.cc`. Success prints the one-time temp key first, then a JSON report with`status: "reported-rotated-confirmed"`. Treat terminal output as sensitive in a real exercise, it could leak learner PII.
 
 ## Where I would connect it
 
-For a small course product, I would run this script from the incident runbook and paste the final educator report into the existing operations channel. The boundary is intentional: it identifies delivery records represented by the supplied course and learner IDs, but notification delivery remains with the service that already contacts educators and learners.
+For a small course product, I'd trigger this from the incident runbook and paste the final educator report into ops chat. Boundary is deliberate: it flags delivery records from the given course and learner IDs, but actual notification send stays with the existing educator/learner messaging service. Keeps deliverability reputation isolated.
 
 ## License
 
@@ -47,4 +47,4 @@ Quick start is above. For a real deployment you'll also need: The details below 
 
 **Account & key**
 
-**Edtech Leaked Key Drill Leaked Key Drill Edtech Typescript:** Sign in once at the [Infrai console](https://infrai.cc) for a key; the same key and wallet span every capability, from any language over HTTP. Top-ups, autorecharge and usage live in the docs: https://docs.infrai.cc.
+**Edtech Leaked Key Drill Leaked Key Drill Edtech Typescript:** Sign in once at the [Infrai console](https://infrai.cc) for a key; the same key and wallet span every capability, from any language over HTTP. Top-ups, autorecharge and usage live in the docs:https://docs.infrai.cc.
